@@ -1,0 +1,6 @@
+*.auf
+*.exe
+*.bak
+/manual/*
+/lib/*
+/backup/*

@@ -1,0 +1,44 @@
+object FileSelectionFrame: TFileSelectionFrame
+  Left = 0
+  Height = 339
+  Top = 0
+  Width = 718
+  ClientHeight = 339
+  ClientWidth = 718
+  DesignTimePPI = 120
+  ParentFont = False
+  TabOrder = 0
+  DesignLeft = 992
+  DesignTop = 556
+  object ListBox: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 5
+    Height = 329
+    Top = 5
+    Width = 708
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 5
+    BorderSpacing.Top = 5
+    BorderSpacing.Right = 5
+    BorderSpacing.Bottom = 5
+    ItemHeight = 0
+    OnEnter = ListBoxEnter
+    OnKeyDown = ListBoxKeyDown
+    OnKeyUp = ListBoxKeyUp
+    Sorted = True
+    TabOrder = 0
+  end
+  object PopupMenu_SelWin: TPopupMenu
+    left = 608
+    top = 56
+    object MenuItem_SelWin_Open: TMenuItem
+      Caption = '打开'
+      OnClick = MenuItem_SelWin_OpenClick
+    end
+  end
+end

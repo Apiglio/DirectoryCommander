@@ -1,0 +1,309 @@
+object Form_DirectoryCommander: TForm_DirectoryCommander
+  Left = 586
+  Height = 616
+  Top = 347
+  Width = 1162
+  Caption = 'Apiglio Directory Commander'
+  ClientHeight = 616
+  ClientWidth = 1162
+  Constraints.MinHeight = 440
+  Constraints.MinWidth = 640
+  DesignTimePPI = 120
+  OnClose = FormClose
+  OnCreate = FormCreate
+  LCLVersion = '1.8.4.0'
+  inline Frame_AufScript1: TFrame_AufScript
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Splitter_Vert
+    AnchorSideBottom.Control = Splitter_CodeH
+    Height = 376
+    Width = 956
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ClientHeight = 376
+    ClientWidth = 956
+    Constraints.MinWidth = 320
+    OnResize = Frame_AufScript1Resize
+    inherited ProgressBar: TProgressBar
+      AnchorSideLeft.Control = Frame_AufScript1
+      AnchorSideRight.Control = Frame_AufScript1
+      AnchorSideBottom.Control = Frame_AufScript1
+      Height = 12
+      Top = 359
+      Width = 946
+    end
+    inherited Memo_out: TMemo
+      AnchorSideRight.Control = Frame_AufScript1
+      Left = 721
+      Height = 279
+      Top = 30
+      Width = 230
+    end
+    inherited Button_run: TButton
+      Left = 721
+      Height = 40
+      Top = 314
+      Width = 85
+    end
+    inherited Button_pause: TButton
+      Left = 794
+      Height = 40
+      Top = 314
+      Width = 85
+    end
+    inherited Button_stop: TButton
+      Left = 866
+      Height = 40
+      Top = 314
+      Width = 85
+    end
+    inherited Button_ScriptLoad: TButton
+      Height = 40
+      Top = 314
+      Width = 85
+    end
+    inherited Button_ScriptSave: TButton
+      Left = 150
+      Height = 40
+      Top = 314
+      Width = 85
+    end
+    inherited Memo_cmd: TSynEdit
+      AnchorSideLeft.Control = Frame_AufScript1
+      Height = 279
+      Top = 30
+      Width = 230
+      Gutter.Width = 61
+      inherited SynLeftGutterPartList1: TSynGutterPartList
+        inherited SynGutterCodeFolding1: TSynGutterCodeFolding
+          AutoSize = False
+          Width = 12
+        end
+      end
+    end
+    inherited TrackBar: TTrackBar
+      AnchorSideLeft.Control = Frame_AufScript1
+      AnchorSideTop.Control = Frame_AufScript1
+      AnchorSideRight.Control = Frame_AufScript1
+      Height = 20
+      Width = 946
+      ShowHint = True
+    end
+    inherited OpenDialog: TOpenDialog
+      left = 352
+    end
+    inherited SaveDialog: TSaveDialog
+      left = 352
+      top = 192
+    end
+  end
+  object Splitter_Vert: TSplitter
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 956
+    Height = 616
+    Top = 0
+    Width = 4
+    Align = alNone
+    Anchors = [akTop, akBottom]
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 26
+    Top = 590
+    Width = 1162
+    Panels = <    
+      item
+        Width = 50
+      end>
+    SimplePanel = False
+  end
+  object Splitter_FileTree_H: TSplitter
+    AnchorSideLeft.Control = Splitter_Vert
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Cursor = crVSplit
+    Left = 960
+    Height = 4
+    Top = 378
+    Width = 202
+    Align = alNone
+    Anchors = [akLeft, akRight]
+    ResizeAnchor = akTop
+  end
+  object Panel_TreeView: TPanel
+    AnchorSideLeft.Control = Splitter_Vert
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Splitter_FileTree_H
+    Left = 960
+    Height = 378
+    Top = 0
+    Width = 202
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BevelOuter = bvNone
+    ClientHeight = 378
+    ClientWidth = 202
+    Constraints.MinHeight = 160
+    TabOrder = 4
+    object TreeView_Directory: TShellTreeView
+      AnchorSideLeft.Control = Panel_TreeView
+      AnchorSideTop.Control = Panel_TreeView
+      AnchorSideRight.Control = Panel_TreeView
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel_TreeView
+      AnchorSideBottom.Side = asrBottom
+      Left = 5
+      Height = 336
+      Top = 37
+      Width = 192
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Left = 5
+      BorderSpacing.Top = 37
+      BorderSpacing.Right = 5
+      BorderSpacing.Bottom = 5
+      FileSortType = fstNone
+      ReadOnly = True
+      RightClickSelect = True
+      TabOrder = 0
+      OnChange = TreeView_DirectoryChange
+      OnMouseEnter = TreeView_DirectoryMouseEnter
+      OnMouseLeave = TreeView_DirectoryMouseLeave
+      OnMouseUp = TreeView_DirectoryMouseUp
+      OnSelectionChanged = TreeView_DirectorySelectionChanged
+      Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoRightClickSelect, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+      ObjectTypes = [otFolders, otNonFolders, otHidden]
+    end
+    object CheckGroup_OptTreeView: TCheckGroup
+      AnchorSideLeft.Control = Panel_TreeView
+      AnchorSideTop.Control = Panel_TreeView
+      AnchorSideRight.Control = Panel_TreeView
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel_TreeView
+      AnchorSideBottom.Side = asrBottom
+      Left = 5
+      Height = 35
+      Top = 0
+      Width = 192
+      Anchors = [akTop, akLeft, akRight]
+      AutoFill = True
+      BorderSpacing.Left = 5
+      BorderSpacing.Right = 5
+      BorderSpacing.Bottom = 5
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 3
+      ClientHeight = 15
+      ClientWidth = 188
+      Columns = 3
+      Items.Strings = (
+        '文件夹'
+        '隐藏'
+        '文件'
+      )
+      OnClick = CheckGroup_OptTreeViewClick
+      TabOrder = 1
+      Data = {
+        03000000020202
+      }
+    end
+  end
+  object Splitter_CodeH: TSplitter
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Splitter_Vert
+    Cursor = crVSplit
+    Left = 0
+    Height = 4
+    Top = 376
+    Width = 956
+    Align = alNone
+    Anchors = [akTop, akLeft, akRight]
+    ResizeAnchor = akTop
+  end
+  inline FileSelectionFrame1: TFileSelectionFrame
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Splitter_CodeH
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Splitter_Vert
+    AnchorSideBottom.Control = StatusBar
+    Height = 210
+    Top = 380
+    Width = 956
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ClientHeight = 210
+    ClientWidth = 956
+    TabOrder = 6
+    DesignLeft = 695
+    DesignTop = 464
+    inherited ListBox: TListBox
+      AnchorSideLeft.Control = FileSelectionFrame1
+      AnchorSideTop.Control = FileSelectionFrame1
+      AnchorSideRight.Control = FileSelectionFrame1
+      AnchorSideBottom.Control = FileSelectionFrame1
+      Left = 6
+      Height = 198
+      Top = 6
+      Width = 944
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 6
+      BorderSpacing.Bottom = 6
+      OnEnter = nil
+      Sorted = False
+    end
+  end
+  object PopupMenu_TreeView: TPopupMenu
+    left = 664
+    top = 168
+    object MenuItem_Cd: TMenuItem
+      Caption = '设为当前目录'
+      OnClick = MenuItem_CdClick
+    end
+    object MenuItem_Hierarchization: TMenuItem
+      Caption = '层次工具'
+      object MenuItem_Flatten: TMenuItem
+        Caption = '扁平化'
+        OnClick = MenuItem_FlattenClick
+      end
+      object MenuItem_Hierarchy: TMenuItem
+        Caption = '层次化'
+        OnClick = MenuItem_HierarchyClick
+      end
+    end
+    object MenuItem_Numberization: TMenuItem
+      Caption = '序列工具'
+      object MenuItem_DecRank: TMenuItem
+        Caption = '十进制'
+      end
+      object MenuItem_HexRank: TMenuItem
+        Caption = '十六进制'
+      end
+    end
+    object MenuItem_rename: TMenuItem
+      Caption = '重命名工具'
+      object MenuItem_SimpleRen: TMenuItem
+        Caption = '简单重命名'
+      end
+      object MenuItem_RegexpRen: TMenuItem
+        Caption = '正则表达式'
+      end
+    end
+    object MenuItem1: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem_refresh: TMenuItem
+      Caption = '刷新目录'
+    end
+  end
+end
