@@ -1,4 +1,8 @@
 //{$define insert}
+
+//ins、ren都存在持续改名的问题，可以确认是Usf.each_file的问题了，不能一边改名一边循环
+//同样的问题也出现在文件名路径长度超过256的情况，全部改成更兼容的版本
+
 unit main_directorycommander;
 
 {$mode objfpc}{$H+}
@@ -14,7 +18,7 @@ uses
   DC_Operation, frame_fileselection;
 
 const
-  version_number='0.0.2';
+  version_number='0.0.3';
 
 type
 
@@ -185,14 +189,14 @@ var AAuf:TAuf;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(2) then exit;
-  try
-    addr  := AufScpt.TryToString(AAuf.nargs[1]);
-  except
-    AufSCpt.send_error('参数转换为字符串失败,该指令未执行。');
-    exit
-  end;
-  FlattenDirAllExt(utf8towincp(addr));
+  //if not AAuf.CheckArgs(2) then exit;
+  //try
+  //  addr  := AufScpt.TryToString(AAuf.nargs[1]);
+  //except
+  //  AufSCpt.send_error('参数转换为字符串失败,该指令未执行。');
+  //  exit
+  //end;
+  FlattenDirAllExt({utf8towincp(addr)}'');
   AufScpt.writeln('执行完成。');
 end;
 procedure p_hierarchy(Sender:TObject);
@@ -202,74 +206,65 @@ var AAuf:TAuf;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(2) then exit;
-  try
-    addr  := AufScpt.TryToString(AAuf.nargs[1]);
-  except
-    AufSCpt.send_error('参数转换为字符串失败,该指令未执行。');
-    exit
-  end;
-  HierarchyDir(utf8towincp(addr));
+  //if not AAuf.CheckArgs(2) then exit;
+  //try
+  //  addr  := AufScpt.TryToString(AAuf.nargs[1]);
+  //except
+  //  AufSCpt.send_error('参数转换为字符串失败,该指令未执行。');
+  //  exit
+  //end;
+  HierarchyDir({utf8towincp(addr)}'');
   AufScpt.writeln('执行完成。');
 end;
 procedure p_regexprdir(Sender:TObject);
 var AAuf:TAuf;
     AufScpt:TAufScript;
-    addr,oldp,newp:string;
+    oldp,newp:string;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(4) then exit;
-  try addr:= AufScpt.TryToString(AAuf.nargs[1]);
-  except AufSCpt.send_error('第一参数转换为字符串失败,该指令未执行。');
+  if not AAuf.CheckArgs(3) then exit;
+  try oldp:= AufScpt.TryToString(AAuf.nargs[1]);
+  except AufSCpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  try oldp:= AufScpt.TryToString(AAuf.nargs[2]);
-  except AufSCpt.send_error('第二参数转换为字符串失败,该指令未执行。');
+  try newp:= AufScpt.TryToString(AAuf.nargs[2]);
+  except AufSCpt.send_error('第2参数转换为字符串失败,该指令未执行。');
   end;
-  try newp:= AufScpt.TryToString(AAuf.nargs[3]);
-  except AufSCpt.send_error('第三参数转换为字符串失败,该指令未执行。');
-  end;
-  RegExprNameFolder(utf8towincp(addr),utf8towincp(oldp),utf8towincp(newp));
+  RegExprNameFolder('',utf8towincp(oldp),utf8towincp(newp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_regexprsel(Sender:TObject);
 var AAuf:TAuf;
     AufScpt:TAufScript;
-    addr,oldp,newp:string;
+    oldp,newp:string;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(4) then exit;
-  try addr:= AufScpt.TryToString(AAuf.nargs[1]);
-  except AufSCpt.send_error('第一参数转换为字符串失败,该指令未执行。');
+  if not AAuf.CheckArgs(3) then exit;
+  try oldp:= AufScpt.TryToString(AAuf.nargs[1]);
+  except AufSCpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  try oldp:= AufScpt.TryToString(AAuf.nargs[2]);
-  except AufSCpt.send_error('第二参数转换为字符串失败,该指令未执行。');
+  try newp:= AufScpt.TryToString(AAuf.nargs[2]);
+  except AufSCpt.send_error('第2参数转换为字符串失败,该指令未执行。');
   end;
-  try newp:= AufScpt.TryToString(AAuf.nargs[3]);
-  except AufSCpt.send_error('第三参数转换为字符串失败,该指令未执行。');
-  end;
-  RegExprNameSelect(utf8towincp(addr),utf8towincp(oldp),utf8towincp(newp));
+  RegExprNameSelect('',utf8towincp(oldp),utf8towincp(newp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_renamedir(Sender:TObject);
 var AAuf:TAuf;
     AufScpt:TAufScript;
-    addr,oldp,newp:string;
+    oldp,newp:string;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(4) then exit;
-  try addr:= AufScpt.TryToString(AAuf.nargs[1]);
-  except AufSCpt.send_error('第一参数转换为字符串失败,该指令未执行。');
+  if not AAuf.CheckArgs(3) then exit;
+  try oldp:= AufScpt.TryToString(AAuf.nargs[1]);
+  except AufSCpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  try oldp:= AufScpt.TryToString(AAuf.nargs[2]);
-  except AufSCpt.send_error('第二参数转换为字符串失败,该指令未执行。');
+  try newp:= AufScpt.TryToString(AAuf.nargs[2]);
+  except AufSCpt.send_error('第2参数转换为字符串失败,该指令未执行。');
   end;
-  try newp:= AufScpt.TryToString(AAuf.nargs[3]);
-  except AufSCpt.send_error('第三参数转换为字符串失败,该指令未执行。');
-  end;
-  ChangeNameFolder(utf8towincp(addr),utf8towincp(oldp),utf8towincp(newp));
+  ChangeNameFolder('',utf8towincp(oldp),utf8towincp(newp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_renamesel(Sender:TObject);
@@ -279,125 +274,104 @@ var AAuf:TAuf;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(4) then exit;
-  try addr:= AufScpt.TryToString(AAuf.nargs[1]);
-  except AufSCpt.send_error('第一参数转换为字符串失败,该指令未执行。');
+  if not AAuf.CheckArgs(3) then exit;
+  try oldp:= AufScpt.TryToString(AAuf.nargs[1]);
+  except AufSCpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  try oldp:= AufScpt.TryToString(AAuf.nargs[2]);
-  except AufSCpt.send_error('第二参数转换为字符串失败,该指令未执行。');
+  try newp:= AufScpt.TryToString(AAuf.nargs[2]);
+  except AufSCpt.send_error('第2参数转换为字符串失败,该指令未执行。');
   end;
-  try newp:= AufScpt.TryToString(AAuf.nargs[3]);
-  except AufSCpt.send_error('第三参数转换为字符串失败,该指令未执行。');
-  end;
-  ChangeNameSelect(utf8towincp(addr),utf8towincp(oldp),utf8towincp(newp));
+  ChangeNameSelect('',utf8towincp(oldp),utf8towincp(newp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_insertLdir(Sender:TObject);
 var AAuf:TAuf;
     AufScpt:TAufScript;
-    addr,oldp,newp:string;
+    oldp:string;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(3) then exit;
-  try addr:= AufScpt.TryToString(AAuf.nargs[1]);
-  except AufSCpt.send_error('第一参数转换为字符串失败,该指令未执行。');
+  if not AAuf.CheckArgs(2) then exit;
+  try oldp:= AufScpt.TryToString(AAuf.nargs[1]);
+  except AufSCpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  try oldp:= AufScpt.TryToString(AAuf.nargs[2]);
-  except AufSCpt.send_error('第二参数转换为字符串失败,该指令未执行。');
-  end;
-  InsertNameLFolder(utf8towincp(addr),utf8towincp(oldp));
+  InsertNameLFolder('',utf8towincp(oldp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_insertLsel(Sender:TObject);
 var AAuf:TAuf;
     AufScpt:TAufScript;
-    addr,oldp,newp:string;
+    oldp:string;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(3) then exit;
-  try addr:= AufScpt.TryToString(AAuf.nargs[1]);
-  except AufSCpt.send_error('第一参数转换为字符串失败,该指令未执行。');
+  if not AAuf.CheckArgs(2) then exit;
+  try oldp:= AufScpt.TryToString(AAuf.nargs[1]);
+  except AufSCpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  try oldp:= AufScpt.TryToString(AAuf.nargs[2]);
-  except AufSCpt.send_error('第二参数转换为字符串失败,该指令未执行。');
-  end;
-  InsertNameLSelect(utf8towincp(addr),utf8towincp(oldp));
+  InsertNameLSelect('',utf8towincp(oldp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_insertRdir(Sender:TObject);
 var AAuf:TAuf;
     AufScpt:TAufScript;
-    addr,oldp,newp:string;
+    oldp:string;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(3) then exit;
-  try addr:= AufScpt.TryToString(AAuf.nargs[1]);
-  except AufScpt.send_error('第一参数转换为字符串失败,该指令未执行。');
+  if not AAuf.CheckArgs(2) then exit;
+  try oldp:= AufScpt.TryToString(AAuf.nargs[1]);
+  except AufScpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  try oldp:= AufScpt.TryToString(AAuf.nargs[2]);
-  except AufScpt.send_error('第二参数转换为字符串失败,该指令未执行。');
-  end;
-  InsertNameRFolder(utf8towincp(addr),utf8towincp(oldp));
+  InsertNameRFolder('',utf8towincp(oldp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_insertRsel(Sender:TObject);
 var AAuf:TAuf;
     AufScpt:TAufScript;
-    addr,oldp,newp:string;
+    oldp:string;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(3) then exit;
-  try addr:= AufScpt.TryToString(AAuf.nargs[1]);
-  except AufScpt.send_error('第一参数转换为字符串失败,该指令未执行。');
+  if not AAuf.CheckArgs(2) then exit;
+  try oldp:= AufScpt.TryToString(AAuf.nargs[1]);
+  except AufScpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  try oldp:= AufScpt.TryToString(AAuf.nargs[2]);
-  except AufScpt.send_error('第二参数转换为字符串失败,该指令未执行。');
-  end;
-  InsertNameRSelect(utf8towincp(addr),utf8towincp(oldp));
+  InsertNameRSelect('',utf8towincp(oldp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_clipnamedir(Sender:TObject);
 var AAuf:TAuf;
     AufScpt:TAufScript;
-    addr,ori,st,en:string;
+    ori,st,en:string;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(4) then exit;
-  try addr:= AufScpt.TryToString(AAuf.nargs[1]);
-  except AufScpt.send_error('第一参数转换为字符串失败,该指令未执行。');
+  if not AAuf.CheckArgs(3) then exit;
+  try st:= AufScpt.TryToString(AAuf.nargs[1]);
+  except AufScpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  try st:= AufScpt.TryToString(AAuf.nargs[2]);
-  except AufScpt.send_error('第二参数转换为字符串失败,该指令未执行。');
+  try en:= AufScpt.TryToString(AAuf.nargs[2]);
+  except AufScpt.send_error('第2参数转换为字符串失败,该指令未执行。');
   end;
-  try en:= AufScpt.TryToString(AAuf.nargs[3]);
-  except AufScpt.send_error('第三参数转换为字符串失败,该指令未执行。');
-  end;
-  ClipNameFolder(utf8towincp(addr),utf8towincp(st),utf8towincp(en));
+  ClipNameFolder('',utf8towincp(st),utf8towincp(en));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_clipnamesel(Sender:TObject);
 var AAuf:TAuf;
     AufScpt:TAufScript;
-    addr,ori,st,en:string;
+    ori,st,en:string;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(4) then exit;
-  try addr:= AufScpt.TryToString(AAuf.nargs[1]);
-  except AufScpt.send_error('第一参数转换为字符串失败,该指令未执行。');
+  if not AAuf.CheckArgs(3) then exit;
+  try st:= AufScpt.TryToString(AAuf.nargs[1]);
+  except AufScpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  try st:= AufScpt.TryToString(AAuf.nargs[2]);
-  except AufScpt.send_error('第二参数转换为字符串失败,该指令未执行。');
+  try en:= AufScpt.TryToString(AAuf.nargs[2]);
+  except AufScpt.send_error('第2参数转换为字符串失败,该指令未执行。');
   end;
-  try en:= AufScpt.TryToString(AAuf.nargs[3]);
-  except AufScpt.send_error('第三参数转换为字符串失败,该指令未执行。');
-  end;
-  ClipNameSelect(utf8towincp(addr),utf8towincp(st),utf8towincp(en));
+  ClipNameSelect('',utf8towincp(st),utf8towincp(en));
   AufScpt.writeln('执行完成。');
 end;
 
@@ -405,36 +379,30 @@ end;
 procedure p_reg_select_folder(Sender:TObject);
 var AAuf:TAuf;
     AufScpt:TAufScript;
-    addr,regexpr:string;
+    regexpr:string;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(3) then exit;
-  try addr:= AufScpt.TryToString(AAuf.nargs[1]);
-  except AufScpt.send_error('第一参数转换为字符串失败,该指令未执行。');
+  if not AAuf.CheckArgs(2) then exit;
+  try regexpr := AufScpt.TryToString(AAuf.nargs[1]);
+  except AufScpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  try regexpr := AufScpt.TryToString(AAuf.nargs[2]);
-  except AufScpt.send_error('第二参数转换为字符串失败,该指令未执行。');
-  end;
-  RegExpSelectFolder(utf8towincp(addr),utf8towincp(regexpr));
+  RegExpSelectFolder('',utf8towincp(regexpr));
   AufScpt.writeln('执行完成。');
 end;
 
 procedure p_reg_select_dir(Sender:TObject);
 var AAuf:TAuf;
     AufScpt:TAufScript;
-    addr,regexpr:string;
+    regexpr:string;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if not AAuf.CheckArgs(3) then exit;
-  try addr:= AufScpt.TryToString(AAuf.nargs[1]);
-  except AufScpt.send_error('第一参数转换为字符串失败,该指令未执行。');
+  if not AAuf.CheckArgs(2) then exit;
+  try regexpr := AufScpt.TryToString(AAuf.nargs[1]);
+  except AufScpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  try regexpr := AufScpt.TryToString(AAuf.nargs[2]);
-  except AufScpt.send_error('第二参数转换为字符串失败,该指令未执行。');
-  end;
-  RegExpSelectDir(utf8towincp(addr),utf8towincp(regexpr));
+  RegExpSelectDir('',utf8towincp(regexpr));
   AufScpt.writeln('执行完成。');
 end;
 
@@ -501,23 +469,23 @@ begin
   frm.Auf.Script.add_func('renameinto',@p_renameinto,'oripath,destpath','重命名文件');
 
 
-  frm.Auf.Script.add_func('flat,flatten',@p_flatten,'addrname','扁平化');
-  frm.Auf.Script.add_func('hier,hierarchy',@p_hierarchy,'addrname','层次化');
+  frm.Auf.Script.add_func('flat,flatten',@p_flatten,'','扁平化');
+  frm.Auf.Script.add_func('hier,hierarchy',@p_hierarchy,'','层次化');
 
-  frm.Auf.Script.add_func('ren,rename',@p_renamedir,'addrname,oldPattern,newPattern','批量替换文件名');
-  frm.Auf.Script.add_func('rens,rename_s',@p_renamesel,'addrname,oldPattern,newPattern','批量替换文件名(选区)');
-  frm.Auf.Script.add_func('clp,clip',@p_clipnamedir,'addrname,starting,ending','批量截除部分文件名');
-  frm.Auf.Script.add_func('clps,clip_s',@p_clipnamesel,'addrname,starting,ending','批量截除部分文件名(选区)');
-  frm.Auf.Script.add_func('insl,prev',@p_insertLdir,'addrname,content','批量前续文件名');
-  frm.Auf.Script.add_func('insls,prev_s',@p_insertLsel,'addrname,content','批量前续文件名(选区)');
-  frm.Auf.Script.add_func('insr,succ',@p_insertRdir,'addrname,content','批量后续文件名');
-  frm.Auf.Script.add_func('insrs,succ_s',@p_insertRsel,'addrname,content','批量后续文件名(选区)');
+  frm.Auf.Script.add_func('ren,rename',@p_renamedir,'oldPattern,newPattern','批量替换文件名');
+  frm.Auf.Script.add_func('rens,rename_s',@p_renamesel,'oldPattern,newPattern','批量替换文件名(选区)');
+  frm.Auf.Script.add_func('clp,clip',@p_clipnamedir,'starting,ending','批量截除部分文件名');
+  frm.Auf.Script.add_func('clps,clip_s',@p_clipnamesel,'starting,ending','批量截除部分文件名(选区)');
+  frm.Auf.Script.add_func('insl,prev',@p_insertLdir,'content','批量前续文件名');
+  frm.Auf.Script.add_func('insls,prev_s',@p_insertLsel,'content','批量前续文件名(选区)');
+  frm.Auf.Script.add_func('insr,succ',@p_insertRdir,'content','批量后续文件名');
+  frm.Auf.Script.add_func('insrs,succ_s',@p_insertRsel,'content','批量后续文件名(选区)');
 
-  //frm.Auf.Script.add_func('rep,regrepname',@p_regexprdir,'addrname,expr,repl','批量使用正则表达式替换文件名');
-  //frm.Auf.Script.add_func('reps,regrepname_s',@p_regexprsel,'addrname,expr,repl','批量使用正则表达式替换替换文件名(选区)');
+  //frm.Auf.Script.add_func('reg,regren',@p_regexprdir,'expr,repl','批量使用正则表达式替换文件名');
+  //frm.Auf.Script.add_func('regs,regren_s',@p_regexprsel,'expr,repl','批量使用正则表达式替换替换文件名(选区)');
 
-  frm.Auf.Script.add_func('reg',@p_reg_select_folder,'addrname,regexpr','根据正则表达式选择文件');
-  frm.Auf.Script.add_func('regx,reg_tree',@p_reg_select_dir,'addrname,regexpr','根据正则表达式递归选择文件');
+  frm.Auf.Script.add_func('sel',@p_reg_select_folder,'addrname,regexpr','根据正则表达式选择文件');
+  frm.Auf.Script.add_func('selx,sel_tree',@p_reg_select_dir,'addrname,regexpr','根据正则表达式递归选择文件');
 
 
 

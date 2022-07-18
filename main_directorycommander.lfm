@@ -8,9 +8,10 @@ object Form_DirectoryCommander: TForm_DirectoryCommander
   ClientWidth = 1162
   Constraints.MinHeight = 440
   Constraints.MinWidth = 640
-  DesignTimePPI = 120
+  DesignTimePPI = 144
   OnClose = FormClose
   OnCreate = FormCreate
+  Position = poScreenCenter
   LCLVersion = '1.8.4.0'
   inline Frame_AufScript1: TFrame_AufScript
     AnchorSideLeft.Control = Owner
@@ -75,6 +76,9 @@ object Form_DirectoryCommander: TForm_DirectoryCommander
       Width = 230
       Gutter.Width = 61
       inherited SynLeftGutterPartList1: TSynGutterPartList
+        inherited SynGutterLineNumber1: TSynGutterLineNumber
+          Width = 19
+        end
         inherited SynGutterCodeFolding1: TSynGutterCodeFolding
           AutoSize = False
           Width = 12
@@ -112,8 +116,8 @@ object Form_DirectoryCommander: TForm_DirectoryCommander
   end
   object StatusBar: TStatusBar
     Left = 0
-    Height = 26
-    Top = 590
+    Height = 34
+    Top = 582
     Width = 1162
     Panels = <    
       item
@@ -204,7 +208,7 @@ object Form_DirectoryCommander: TForm_DirectoryCommander
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 3
-      ClientHeight = 15
+      ClientHeight = 6
       ClientWidth = 188
       Columns = 3
       Items.Strings = (
@@ -237,11 +241,11 @@ object Form_DirectoryCommander: TForm_DirectoryCommander
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Splitter_Vert
     AnchorSideBottom.Control = StatusBar
-    Height = 210
+    Height = 202
     Top = 380
     Width = 956
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ClientHeight = 210
+    ClientHeight = 202
     ClientWidth = 956
     TabOrder = 6
     DesignLeft = 695
@@ -252,7 +256,7 @@ object Form_DirectoryCommander: TForm_DirectoryCommander
       AnchorSideRight.Control = FileSelectionFrame1
       AnchorSideBottom.Control = FileSelectionFrame1
       Left = 6
-      Height = 198
+      Height = 190
       Top = 6
       Width = 944
       BorderSpacing.Left = 6

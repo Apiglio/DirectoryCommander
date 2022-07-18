@@ -16,6 +16,7 @@ type
   Taddrname = string;
   Textname  = string;
   TNumberialMode = (nmDec=0, nmHex=1);
+  PStringFunc = procedure(str:string);
 
   TDC_Operation = class
     FRunEnvironment:Taddrname;
@@ -84,6 +85,38 @@ uses Apiglio_Useful, main_directorycommander;
 procedure ShowFileMessage(str:string);//显示消息
 begin
   Form_DirectoryCommander.Frame_AufScript1.Auf.Script.writeln(str);
+end;
+
+procedure each_file_in_folder(path:ansistring;func_ptr:PStringFunc);
+var filelist:TStringList;
+    stmp:string;
+begin
+  filelist:=TStringList.Create;
+  try
+    FileUtil.FindAllFiles(filelist,path,'*.*',false,faAnyFile);
+    for stmp in filelist do begin
+      //ShowFileMessage(stmp);
+      func_ptr(stmp);
+    end;
+  finally
+    filelist.Free;
+  end;
+end;
+
+procedure each_file(path:ansistring;func_ptr:PStringFunc);
+var filelist:TStringList;
+    stmp:string;
+begin
+  filelist:=TStringList.Create;
+  try
+    FileUtil.FindAllFiles(filelist,path,'*.*',true,faAnyFile);
+    for stmp in filelist do begin
+      //ShowFileMessage(stmp);
+      func_ptr(stmp);
+    end;
+  finally
+    filelist.Free;
+  end;
 end;
 
 function Numberize(num:longint;mode:TNumberialMode):string;
@@ -217,10 +250,10 @@ begin
   ofile:=DCOP.RunEnvironment+'\'+ori;
   dfile:=DCOP.RunEnvironment+'\'+dest;
   {$ifndef CheckMode}
-    if ForceDirectories(wincptoutf8(ExtractFilePath(dfile))) then ;
-    result:=MoveFile(PChar(ofile),PChar(dfile));
+    if ForceDirectories({wincptoutf8}(ExtractFilePath(dfile))) then ;
+    result:=MoveFile(PChar(utf8towincp(ofile)),PChar(utf8towincp(dfile)));
   {$else}
-    ShowFileMessage('M:'+wincptoutf8(ofile)+'-'+wincptoutf8(dfile));
+    ShowFileMessage('M:'+{wincptoutf8}(ofile)+' - '+{wincptoutf8}(dfile));
   {$endif}
 end;
 
@@ -230,10 +263,10 @@ begin
   ofile:=DCOP.RunEnvironment+'\'+ori;
   dfile:=DCOP.RunEnvironment+'\'+dest;
   {$ifndef CheckMode}
-    if ForceDirectories(wincptoutf8(ExtractFilePath(dfile))) then ;
-    result:=CopyFile(PChar(ofile),PChar(dfile),false);
+    if ForceDirectories({wincptoutf8}(ExtractFilePath(dfile))) then ;
+    result:=CopyFile(PChar(utf8towincp(ofile)),PChar(utf8towincp(dfile)),false);
   {$else}
-    ShowFileMessage('C:'+wincptoutf8(ofile)+'-'+wincptoutf8(dfile));
+    ShowFileMessage('C:'+{wincptoutf8}(ofile)+' - '+{wincptoutf8}(dfile));
   {$endif}
 end;
 
@@ -243,10 +276,10 @@ begin
   ofile:=DCOP.RunEnvironment+'\'+ori;
   dfile:=DCOP.RunEnvironment+'\'+dest;
   {$ifndef CheckMode}
-    ReNameFile(wincptoutf8(ofile),wincptoutf8(dfile));
+    ReNameFile({wincptoutf8}(ofile),{wincptoutf8}(dfile));
     result:=true;
   {$else}
-    ShowFileMessage('R:'+wincptoutf8(ofile)+'-'+wincptoutf8(dfile));
+    ShowFileMessage('R:'+{wincptoutf8}(ofile)+'-'+{wincptoutf8}(dfile));
   {$endif}
 end;
 
@@ -266,7 +299,7 @@ end;
 procedure FlattenDirAllExt(addr:Taddrname);
 
 begin
-  Usf.each_file(DCOP.RunEnvironment+'\'+addr,@enum_flatten);
+  each_file(DCOP.RunEnvironment+'\'+addr,@enum_flatten);
 end;
 
 procedure FlattenDir(addr:Taddrname;ext:Textname);
@@ -289,7 +322,7 @@ end;
 procedure HierarchyDir(addr:Taddrname);
 
 begin
-  Usf.each_file(DCOP.RunEnvironment+'\'+addr,@enum_hierarchy);
+  each_file(DCOP.RunEnvironment+'\'+addr,@enum_hierarchy);
 end;
 
 
@@ -374,7 +407,7 @@ begin
   if oriStr='' then exit;
   RunParameters[0]:=oriStr;
   RunParameters[1]:=destStr;
-  Usf.each_file_in_folder(DCOP.RunEnvironment+'\'+addr,@enum_RegExprName);
+  each_file_in_folder(DCOP.RunEnvironment+'\'+addr,@enum_RegExprName);
 end;
 
 procedure RegExprNameSelect(addr:Taddrname;oriStr,destStr:string);
@@ -400,7 +433,7 @@ begin
   if oriStr='' then exit;
   RunParameters[0]:=oriStr;
   RunParameters[1]:=destStr;
-  Usf.each_file_in_folder(DCOP.RunEnvironment+'\'+addr,@enum_ChangeName);
+  each_file_in_folder(DCOP.RunEnvironment+'\'+addr,@enum_ChangeName);
 end;
 
 procedure ChangeNameSelect(addr:Taddrname;oriStr,destStr:string);
@@ -416,7 +449,7 @@ begin
     begin
       RunParameters[4]:=Numberize(tmp,nmDec);
       //filemessage(RunParameters[4]);
-      enum_ChangeName(DCOP.RunEnvironment+'\'+addr+'\'+utf8towincp(items[tmp]));
+      enum_ChangeName(DCOP.RunEnvironment+'\'+addr+'\'+{utf8towincp}(items[tmp]));
       inc(tmp);
     end;
 end;
@@ -424,7 +457,7 @@ end;
 procedure InsertNameLFolder(addr:Taddrname;cStr:string);
 begin
   RunParameters[0]:=cStr;
-  Usf.each_file_in_folder(DCOP.RunEnvironment+'\'+addr,@enum_InsertNameL);
+  each_file_in_folder(DCOP.RunEnvironment+'\'+addr,@enum_InsertNameL);
 end;
 
 procedure InsertNameLSelect(addr:Taddrname;cStr:string);
@@ -438,14 +471,14 @@ begin
     begin
       RunParameters[4]:=Numberize(tmp,nmDec);
       //showfilemessage(RunParameters[4]);
-      enum_InsertNameL(DCOP.RunEnvironment+'\'+addr+'\'+utf8towincp(items[tmp]));
+      enum_InsertNameL(DCOP.RunEnvironment+'\'+addr+'\'+{utf8towincp}(items[tmp]));
       inc(tmp);
     end;
 end;
 procedure InsertNameRFolder(addr:Taddrname;cStr:string);
 begin
   RunParameters[0]:=cStr;
-  Usf.each_file_in_folder(DCOP.RunEnvironment+'\'+addr,@enum_InsertNameR);
+  each_file_in_folder(DCOP.RunEnvironment+'\'+addr,@enum_InsertNameR);
 end;
 
 procedure InsertNameRSelect(addr:Taddrname;cStr:string);
@@ -459,7 +492,7 @@ begin
     begin
       RunParameters[4]:=Numberize(tmp,nmDec);
       //showfilemessage(RunParameters[4]);
-      enum_InsertNameR(DCOP.RunEnvironment+'\'+addr+'\'+utf8towincp(items[tmp]));
+      enum_InsertNameR(DCOP.RunEnvironment+'\'+addr+'\'+{utf8towincp}(items[tmp]));
       inc(tmp);
     end;
 end;
@@ -468,7 +501,7 @@ procedure ClipNameFolder(addr:Taddrname;cSt,cEn:string);
 begin
   RunParameters[0]:=cSt;
   RunParameters[1]:=cEn;
-  Usf.each_file_in_folder(DCOP.RunEnvironment+'\'+addr,@enum_ClipName);
+  each_file_in_folder(DCOP.RunEnvironment+'\'+addr,@enum_ClipName);
 end;
 
 procedure ClipNameSelect(addr:Taddrname;cSt,cEn:string);
@@ -481,7 +514,7 @@ begin
   items:=Form_DirectoryCommander.FileSelectionFrame1.ListBox.Items;
   while tmp<items.Count do
     begin
-      enum_ClipName(DCOP.RunEnvironment+'\'+addr+'\'+utf8towincp(items[tmp]));
+      enum_ClipName(DCOP.RunEnvironment+'\'+addr+'\'+{utf8towincp}(items[tmp]));
       inc(tmp);
     end;
 end;
@@ -489,21 +522,21 @@ end;
 procedure enum_RegSelect(filename:string);
 begin
   filename:=Environmentalization(filename,DCOP.RunEnvironment);
-  if RegExp.Exec(filename) then Form_DirectoryCommander.FileSelectionFrame1.Add(wincptoutf8(filename));
+  if RegExp.Exec(filename) then Form_DirectoryCommander.FileSelectionFrame1.Add({wincptoutf8}(filename));
 end;
 
 procedure RegExpSelectFolder(addr:Taddrname;reg:string);
 begin
   Form_DirectoryCommander.FileSelectionFrame1.Clear;
   RegExp.Expression:=reg;
-  Usf.each_file_in_folder(DCOP.RunEnvironment+'\'+addr,@enum_RegSelect);
+  each_file_in_folder(DCOP.RunEnvironment+'\'+addr,@enum_RegSelect);
 end;
 
 procedure RegExpSelectDir(addr:Taddrname;reg:string);
 begin
   Form_DirectoryCommander.FileSelectionFrame1.Clear;
   RegExp.Expression:=reg;
-  Usf.each_file(DCOP.RunEnvironment+'\'+addr,@enum_RegSelect);
+  each_file(DCOP.RunEnvironment+'\'+addr,@enum_RegSelect);
 end;
 
 
