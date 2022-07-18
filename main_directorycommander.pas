@@ -1,8 +1,5 @@
 //{$define insert}
 
-//ins、ren都存在持续改名的问题，可以确认是Usf.each_file的问题了，不能一边改名一边循环
-//同样的问题也出现在文件名路径长度超过256的情况，全部改成更兼容的版本
-
 unit main_directorycommander;
 
 {$mode objfpc}{$H+}
@@ -18,7 +15,7 @@ uses
   DC_Operation, frame_fileselection;
 
 const
-  version_number='0.0.3';
+  version_number='0.0.4';
 
 type
 
@@ -51,6 +48,7 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure Frame_AufScript1Resize(Sender: TObject);
+    procedure ListBoxMouseEnter(Sender: TObject);
     procedure MenuItem_CdClick(Sender: TObject);
     procedure MenuItem_FlattenClick(Sender: TObject);
     procedure MenuItem_HierarchyClick(Sender: TObject);
@@ -183,37 +181,17 @@ end;
 
 
 procedure p_flatten(Sender:TObject);
-var AAuf:TAuf;
-    AufScpt:TAufScript;
-    addr:string;
+var AufScpt:TAufScript;
 begin
   AufScpt := Sender as TAufScript;
-  AAuf    := AufScpt.Auf as TAuf;
-  //if not AAuf.CheckArgs(2) then exit;
-  //try
-  //  addr  := AufScpt.TryToString(AAuf.nargs[1]);
-  //except
-  //  AufSCpt.send_error('参数转换为字符串失败,该指令未执行。');
-  //  exit
-  //end;
-  FlattenDirAllExt({utf8towincp(addr)}'');
+  FlattenDirAllExt('');
   AufScpt.writeln('执行完成。');
 end;
 procedure p_hierarchy(Sender:TObject);
-var AAuf:TAuf;
-    AufScpt:TAufScript;
-    addr:string;
+var AufScpt:TAufScript;
 begin
   AufScpt := Sender as TAufScript;
-  AAuf    := AufScpt.Auf as TAuf;
-  //if not AAuf.CheckArgs(2) then exit;
-  //try
-  //  addr  := AufScpt.TryToString(AAuf.nargs[1]);
-  //except
-  //  AufSCpt.send_error('参数转换为字符串失败,该指令未执行。');
-  //  exit
-  //end;
-  HierarchyDir({utf8towincp(addr)}'');
+  HierarchyDir('');
   AufScpt.writeln('执行完成。');
 end;
 procedure p_regexprdir(Sender:TObject);
@@ -481,11 +459,11 @@ begin
   frm.Auf.Script.add_func('insr,succ',@p_insertRdir,'content','批量后续文件名');
   frm.Auf.Script.add_func('insrs,succ_s',@p_insertRsel,'content','批量后续文件名(选区)');
 
-  //frm.Auf.Script.add_func('reg,regren',@p_regexprdir,'expr,repl','批量使用正则表达式替换文件名');
-  //frm.Auf.Script.add_func('regs,regren_s',@p_regexprsel,'expr,repl','批量使用正则表达式替换替换文件名(选区)');
+  frm.Auf.Script.add_func('reg,regren',@p_regexprdir,'expr,repl','批量使用正则表达式替换文件名');
+  frm.Auf.Script.add_func('regs,regren_s',@p_regexprsel,'expr,repl','批量使用正则表达式替换替换文件名(选区)');
 
-  frm.Auf.Script.add_func('sel',@p_reg_select_folder,'addrname,regexpr','根据正则表达式选择文件');
-  frm.Auf.Script.add_func('selx,sel_tree',@p_reg_select_dir,'addrname,regexpr','根据正则表达式递归选择文件');
+  frm.Auf.Script.add_func('sel,select',@p_reg_select_folder,'regexpr','根据正则表达式选择文件');
+  frm.Auf.Script.add_func('selx,sel_tree',@p_reg_select_dir,'regexpr','根据正则表达式递归选择文件');
 
 
 
@@ -494,7 +472,7 @@ begin
 
   frm.HighLighterReNew;
   GlobalExpressionList.TryAddExp('sel',narg('"','','"'));
-  GlobalExpressionList.TryAddExp('ssel',narg('"','','"'));
+  GlobalExpressionList.TryAddExp('rsel',narg('"','','"'));
 
   frm.TrackBar.Position:=70;
 
@@ -532,6 +510,11 @@ begin
   frm.Height:=Self.Splitter_CodeH.Top;
   frm.FrameResize(nil);
 
+end;
+
+procedure TForm_DirectoryCommander.ListBoxMouseEnter(Sender: TObject);
+begin
+  ShowManual('文件选择列表。通过select或sel指令加正则表达式筛选，作为rens、clps、insls等指令的有效修改部分。');
 end;
 
 procedure TForm_DirectoryCommander.MenuItem_CdClick(Sender: TObject);
@@ -599,7 +582,7 @@ end;
 procedure TForm_DirectoryCommander.TreeView_DirectoryMouseEnter(Sender: TObject
   );
 begin
-  Self.ShowManual('目录浏览器，按右键选择项目并执行目录操作。');
+  Self.ShowManual('目录浏览器。按右键选择项目并执行目录操作。');
 end;
 
 procedure TForm_DirectoryCommander.TreeView_DirectoryMouseLeave(Sender: TObject
@@ -622,7 +605,7 @@ var dtmp:string;
 begin
   dtmp:=utf8towincp(Self.TreeView_Directory.GetPathFromNode(Self.TreeView_Directory.Selected));
   GlobalExpressionList.TryAddExp('sel',narg('"',wincptoutf8(dtmp),'"'));
-  GlobalExpressionList.TryAddExp('ssel',narg('"',wincptoutf8(Environmentalization(dtmp,DCOP.RunEnvironment)),'"'));
+  GlobalExpressionList.TryAddExp('rsel',narg('"',wincptoutf8(Environmentalization(dtmp,DCOP.RunEnvironment)),'"'));
   //utf8towincp
 end;
 

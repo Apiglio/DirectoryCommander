@@ -114,29 +114,19 @@ object Form_DirectoryCommander: TForm_DirectoryCommander
     Align = alNone
     Anchors = [akTop, akBottom]
   end
-  object StatusBar: TStatusBar
-    Left = 0
-    Height = 34
-    Top = 582
-    Width = 1162
-    Panels = <    
-      item
-        Width = 50
-      end>
-    SimplePanel = False
-  end
   object Splitter_FileTree_H: TSplitter
     AnchorSideLeft.Control = Splitter_Vert
     AnchorSideLeft.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = StatusBar
     Cursor = crVSplit
     Left = 960
     Height = 4
-    Top = 378
+    Top = 578
     Width = 202
     Align = alNone
-    Anchors = [akLeft, akRight]
+    Anchors = [akLeft, akRight, akBottom]
     ResizeAnchor = akTop
   end
   object Panel_TreeView: TPanel
@@ -147,12 +137,12 @@ object Form_DirectoryCommander: TForm_DirectoryCommander
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Splitter_FileTree_H
     Left = 960
-    Height = 378
+    Height = 578
     Top = 0
     Width = 202
     Anchors = [akTop, akLeft, akRight, akBottom]
     BevelOuter = bvNone
-    ClientHeight = 378
+    ClientHeight = 578
     ClientWidth = 202
     Constraints.MinHeight = 160
     TabOrder = 4
@@ -164,7 +154,7 @@ object Form_DirectoryCommander: TForm_DirectoryCommander
       AnchorSideBottom.Control = Panel_TreeView
       AnchorSideBottom.Side = asrBottom
       Left = 5
-      Height = 336
+      Height = 536
       Top = 37
       Width = 192
       Anchors = [akTop, akLeft, akRight, akBottom]
@@ -264,8 +254,20 @@ object Form_DirectoryCommander: TForm_DirectoryCommander
       BorderSpacing.Right = 6
       BorderSpacing.Bottom = 6
       OnEnter = nil
+      OnMouseEnter = ListBoxMouseEnter
       Sorted = False
     end
+  end
+  object StatusBar: TStatusBar
+    Left = 0
+    Height = 34
+    Top = 582
+    Width = 1162
+    Panels = <    
+      item
+        Width = 50
+      end>
+    SimplePanel = False
   end
   object PopupMenu_TreeView: TPopupMenu
     left = 664
