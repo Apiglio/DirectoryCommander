@@ -1,4 +1,7 @@
 //{$define CheckMode}
+//这真tm是失败的架构，utf8和wincp来回折腾。
+//现在起，全部改成utf8
+
 unit DC_Operation;
 
 {$mode objfpc}{$H+}
@@ -87,7 +90,7 @@ begin
   Form_DirectoryCommander.Frame_AufScript1.Auf.Script.writeln(str);
 end;
 
-procedure each_file_in_folder(path:ansistring;func_ptr:PStringFunc);
+procedure each_file_in_folder(path:utf8string;func_ptr:PStringFunc);
 var filelist:TStringList;
     stmp:string;
 begin
@@ -103,7 +106,7 @@ begin
   end;
 end;
 
-procedure each_file(path:ansistring;func_ptr:PStringFunc);
+procedure each_file(path:utf8string;func_ptr:PStringFunc);
 var filelist:TStringList;
     stmp:string;
 begin

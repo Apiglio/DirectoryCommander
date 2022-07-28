@@ -15,7 +15,7 @@ uses
   DC_Operation, frame_fileselection;
 
 const
-  version_number='0.0.4';
+  version_number='0.0.5';
 
 type
 
@@ -26,13 +26,15 @@ type
     FileSelectionFrame1: TFileSelectionFrame;
     Frame_AufScript1: TFrame_AufScript;
     MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem_Flatten: TMenuItem;
     MenuItem_RegexpRen: TMenuItem;
     MenuItem_DecRank: TMenuItem;
     MenuItem_SimpleRen: TMenuItem;
     MenuItem_HexRank: TMenuItem;
     MenuItem_rename: TMenuItem;
     MenuItem_Numberization: TMenuItem;
-    MenuItem_Flatten: TMenuItem;
+    MenuItem_Flatten_To_Parent: TMenuItem;
     MenuItem_Hierarchy: TMenuItem;
     MenuItem_Hierarchization: TMenuItem;
     MenuItem_Cd: TMenuItem;
@@ -51,6 +53,7 @@ type
     procedure ListBoxMouseEnter(Sender: TObject);
     procedure MenuItem_CdClick(Sender: TObject);
     procedure MenuItem_FlattenClick(Sender: TObject);
+    procedure MenuItem_Flatten_To_ParentClick(Sender: TObject);
     procedure MenuItem_HierarchyClick(Sender: TObject);
     procedure TreeView_DirectoryChange(Sender: TObject; Node: TTreeNode);
     procedure TreeView_DirectoryMouseEnter(Sender: TObject);
@@ -97,7 +100,7 @@ begin
     AufSCpt.send_error('参数转换为字符串失败,该指令未执行。');
     exit
   end;
-  DCOP.RunEnvironment:=utf8towincp(addr);
+  DCOP.RunEnvironment:={utf8towincp}(addr);
   AufSCpt.writeln('当前操作目录已修改为：'+wincptoutf8(DCOP.RunEnvironment));
 end;
 procedure p_intodir(Sender:TObject);
@@ -208,7 +211,7 @@ begin
   try newp:= AufScpt.TryToString(AAuf.nargs[2]);
   except AufSCpt.send_error('第2参数转换为字符串失败,该指令未执行。');
   end;
-  RegExprNameFolder('',utf8towincp(oldp),utf8towincp(newp));
+  RegExprNameFolder('',{utf8towincp}(oldp),{utf8towincp}(newp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_regexprsel(Sender:TObject);
@@ -225,7 +228,7 @@ begin
   try newp:= AufScpt.TryToString(AAuf.nargs[2]);
   except AufSCpt.send_error('第2参数转换为字符串失败,该指令未执行。');
   end;
-  RegExprNameSelect('',utf8towincp(oldp),utf8towincp(newp));
+  RegExprNameSelect('',{utf8towincp}(oldp),{utf8towincp}(newp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_renamedir(Sender:TObject);
@@ -242,7 +245,7 @@ begin
   try newp:= AufScpt.TryToString(AAuf.nargs[2]);
   except AufSCpt.send_error('第2参数转换为字符串失败,该指令未执行。');
   end;
-  ChangeNameFolder('',utf8towincp(oldp),utf8towincp(newp));
+  ChangeNameFolder('',{utf8towincp}(oldp),{utf8towincp}(newp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_renamesel(Sender:TObject);
@@ -259,7 +262,7 @@ begin
   try newp:= AufScpt.TryToString(AAuf.nargs[2]);
   except AufSCpt.send_error('第2参数转换为字符串失败,该指令未执行。');
   end;
-  ChangeNameSelect('',utf8towincp(oldp),utf8towincp(newp));
+  ChangeNameSelect('',{utf8towincp}(oldp),{utf8towincp}(newp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_insertLdir(Sender:TObject);
@@ -273,7 +276,7 @@ begin
   try oldp:= AufScpt.TryToString(AAuf.nargs[1]);
   except AufSCpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  InsertNameLFolder('',utf8towincp(oldp));
+  InsertNameLFolder('',{utf8towincp}(oldp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_insertLsel(Sender:TObject);
@@ -287,7 +290,7 @@ begin
   try oldp:= AufScpt.TryToString(AAuf.nargs[1]);
   except AufSCpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  InsertNameLSelect('',utf8towincp(oldp));
+  InsertNameLSelect('',{utf8towincp}(oldp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_insertRdir(Sender:TObject);
@@ -301,7 +304,7 @@ begin
   try oldp:= AufScpt.TryToString(AAuf.nargs[1]);
   except AufScpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  InsertNameRFolder('',utf8towincp(oldp));
+  InsertNameRFolder('',{utf8towincp}(oldp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_insertRsel(Sender:TObject);
@@ -315,7 +318,7 @@ begin
   try oldp:= AufScpt.TryToString(AAuf.nargs[1]);
   except AufScpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  InsertNameRSelect('',utf8towincp(oldp));
+  InsertNameRSelect('',{utf8towincp}(oldp));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_clipnamedir(Sender:TObject);
@@ -332,7 +335,7 @@ begin
   try en:= AufScpt.TryToString(AAuf.nargs[2]);
   except AufScpt.send_error('第2参数转换为字符串失败,该指令未执行。');
   end;
-  ClipNameFolder('',utf8towincp(st),utf8towincp(en));
+  ClipNameFolder('',{utf8towincp}(st),{utf8towincp}(en));
   AufScpt.writeln('执行完成。');
 end;
 procedure p_clipnamesel(Sender:TObject);
@@ -349,7 +352,7 @@ begin
   try en:= AufScpt.TryToString(AAuf.nargs[2]);
   except AufScpt.send_error('第2参数转换为字符串失败,该指令未执行。');
   end;
-  ClipNameSelect('',utf8towincp(st),utf8towincp(en));
+  ClipNameSelect('',{utf8towincp}(st),{utf8towincp}(en));
   AufScpt.writeln('执行完成。');
 end;
 
@@ -365,7 +368,7 @@ begin
   try regexpr := AufScpt.TryToString(AAuf.nargs[1]);
   except AufScpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  RegExpSelectFolder('',utf8towincp(regexpr));
+  RegExpSelectFolder('',{utf8towincp}(regexpr));
   AufScpt.writeln('执行完成。');
 end;
 
@@ -380,7 +383,7 @@ begin
   try regexpr := AufScpt.TryToString(AAuf.nargs[1]);
   except AufScpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
-  RegExpSelectDir('',utf8towincp(regexpr));
+  RegExpSelectDir('',{utf8towincp}(regexpr));
   AufScpt.writeln('执行完成。');
 end;
 
@@ -523,6 +526,27 @@ begin
 end;
 
 procedure TForm_DirectoryCommander.MenuItem_FlattenClick(Sender: TObject);
+var ntmp:TTreeNode;
+    str:TStringList;
+    env:string;
+begin
+  ntmp:=Self.TreeView_Directory.Selected;
+  if ntmp=nil then exit;
+  if ntmp.Parent=nil then exit;
+
+  env:=Self.TreeView_Directory.GetPathFromNode(ntmp);
+
+  str:=TStringList.Create;
+  str.add('cd "'+env+'"');
+  str.add('flatten ""');
+  Self.Frame_AufScript1.Auf.Script.command(str);
+  str.Free;
+  ntmp.Collapse(false);
+  Application.ProcessMessages;
+  ntmp.Expand(false);
+end;
+
+procedure TForm_DirectoryCommander.MenuItem_Flatten_To_ParentClick(Sender: TObject);
 var ntmp:TTreeNode;
     str:TStringList;
     env,tar:string;

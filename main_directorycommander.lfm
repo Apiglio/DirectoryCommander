@@ -286,6 +286,13 @@ object Form_DirectoryCommander: TForm_DirectoryCommander
         Caption = '层次化'
         OnClick = MenuItem_HierarchyClick
       end
+      object MenuItem2: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem_Flatten_To_Parent: TMenuItem
+        Caption = '扁平化至上层'
+        OnClick = MenuItem_Flatten_To_ParentClick
+      end
     end
     object MenuItem_Numberization: TMenuItem
       Caption = '序列工具'
