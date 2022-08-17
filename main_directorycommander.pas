@@ -8,14 +8,14 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  ComCtrls, StdCtrls, ShellCtrls, Menus, LazUTF8,
+  ComCtrls, StdCtrls, ShellCtrls, Menus, LazUTF8, Windows,
   {$ifndef insert}
   Apiglio_Useful, AufScript_Frame,
   {$endif}
   DC_Operation, frame_fileselection;
 
 const
-  version_number='0.0.5';
+  version_number='0.0.6';
 
 type
 
@@ -25,8 +25,9 @@ type
     CheckGroup_OptTreeView: TCheckGroup;
     FileSelectionFrame1: TFileSelectionFrame;
     Frame_AufScript1: TFrame_AufScript;
-    MenuItem1: TMenuItem;
+    MenuItem_div01: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItem_openDir: TMenuItem;
     MenuItem_Flatten: TMenuItem;
     MenuItem_RegexpRen: TMenuItem;
     MenuItem_DecRank: TMenuItem;
@@ -55,6 +56,7 @@ type
     procedure MenuItem_FlattenClick(Sender: TObject);
     procedure MenuItem_Flatten_To_ParentClick(Sender: TObject);
     procedure MenuItem_HierarchyClick(Sender: TObject);
+    procedure MenuItem_openDirClick(Sender: TObject);
     procedure TreeView_DirectoryChange(Sender: TObject; Node: TTreeNode);
     procedure TreeView_DirectoryMouseEnter(Sender: TObject);
     procedure TreeView_DirectoryMouseLeave(Sender: TObject);
@@ -101,7 +103,7 @@ begin
     exit
   end;
   DCOP.RunEnvironment:={utf8towincp}(addr);
-  AufSCpt.writeln('当前操作目录已修改为：'+wincptoutf8(DCOP.RunEnvironment));
+  AufSCpt.writeln('当前操作目录已修改为：'+{wincptoutf8}(DCOP.RunEnvironment));
 end;
 procedure p_intodir(Sender:TObject);
 var AAuf:TAuf;
@@ -117,7 +119,7 @@ begin
     AufSCpt.send_error('参数转换为字符串失败,该指令未执行。');
     exit
   end;
-  if DCOP.EnvIntoDir(folder) then AufSCpt.writeln('当前操作目录已修改为：'+wincptoutf8(DCOP.RunEnvironment))
+  if DCOP.EnvIntoDir(folder) then AufSCpt.writeln('当前操作目录已修改为：'+{wincptoutf8}(DCOP.RunEnvironment))
   else AufSCpt.writeln('未找到给定的子目录。');
 end;
 procedure p_backdir(Sender:TObject);
@@ -127,7 +129,7 @@ var AAuf:TAuf;
 begin
   AufScpt := Sender as TAufScript;
   AAuf    := AufScpt.Auf as TAuf;
-  if DCOP.EnvBackDir then AufSCpt.writeln('当前操作目录已修改为：'+wincptoutf8(DCOP.RunEnvironment))
+  if DCOP.EnvBackDir then AufSCpt.writeln('当前操作目录已修改为：'+{wincptoutf8}(DCOP.RunEnvironment))
   else AufSCpt.writeln('当前目录不能继续后退。');
 end;
 procedure p_moveto(Sender:TObject);
@@ -369,7 +371,7 @@ begin
   except AufScpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
   RegExpSelectFolder('',{utf8towincp}(regexpr));
-  AufScpt.writeln('执行完成。');
+  AufScpt.writeln('执行完成，共找到'+IntToStr(Form_DirectoryCommander.FileSelectionFrame1.ListBox.Count)+'个符合条件的文件。');
 end;
 
 procedure p_reg_select_dir(Sender:TObject);
@@ -384,7 +386,7 @@ begin
   except AufScpt.send_error('第1参数转换为字符串失败,该指令未执行。');
   end;
   RegExpSelectDir('',{utf8towincp}(regexpr));
-  AufScpt.writeln('执行完成。');
+  AufScpt.writeln('执行完成，共找到'+IntToStr(Form_DirectoryCommander.FileSelectionFrame1.ListBox.Count)+'个符合条件的文件。');
 end;
 
 
@@ -594,6 +596,11 @@ begin
   ntmp.Collapse(false);
   Application.ProcessMessages;
   ntmp.Expand(false);
+end;
+
+procedure TForm_DirectoryCommander.MenuItem_openDirClick(Sender: TObject);
+begin
+  ShellExecute(0,'open','explorer',pchar('"'+Utf8toWinCP(Self.TreeView_Directory.GetPathFromNode(Self.TreeView_Directory.Selected))+'"'),nil,SW_NORMAL);
 end;
 
 

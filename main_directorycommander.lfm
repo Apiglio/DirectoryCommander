@@ -312,11 +312,15 @@ object Form_DirectoryCommander: TForm_DirectoryCommander
         Caption = '正则表达式'
       end
     end
-    object MenuItem1: TMenuItem
+    object MenuItem_div01: TMenuItem
       Caption = '-'
     end
     object MenuItem_refresh: TMenuItem
       Caption = '刷新目录'
+    end
+    object MenuItem_openDir: TMenuItem
+      Caption = '在文件夹中打开'
+      OnClick = MenuItem_openDirClick
     end
   end
 end
